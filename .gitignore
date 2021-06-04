@@ -5,8 +5,7 @@
 /.pnp
 .pnp.js
 
-/src/plugins/fetch-plugin-old.ts
-
+/.src/plugins/fetch-plugin-old.ts
 # testing
 /coverage
 
