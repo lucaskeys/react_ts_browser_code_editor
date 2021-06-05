@@ -1,10 +1,4 @@
 import * as esbuild from 'esbuild-wasm';
-import axios from 'axios';
-import localForage from 'localforage';
-
-const fileCache = localForage.createInstance({
-  name: 'filecache'
-});
 
 // just testing to see if something is saved to our browser db - can check via application tab in our console, then going to indexedDB and our storage name
 // (async () => {
@@ -24,7 +18,7 @@ export const unpkgPathPlugin = () => {
       build.onResolve({ filter: /(^index\.js$)/ }, () => {
         return {
           path: 'index.js',
-          namespace: 'a'
+          namespace: 'a',
         };
       });
 
@@ -38,7 +32,7 @@ export const unpkgPathPlugin = () => {
         return {
           namespace: 'a',
           // importer - 'unpkg.com/medium-test-pkg'
-          path: new URL(args.path, 'https://unpkg.com' + args.resolveDir + '/').href
+          path: new URL(args.path, 'https://unpkg.com' + args.resolveDir + '/').href,
         };
       });
 
@@ -46,12 +40,12 @@ export const unpkgPathPlugin = () => {
       build.onResolve({ filter: /.*/ }, async (args: any) => {
         return {
           namespace: 'a',
-          path: `https://unpkg.com/${args.path}`
+          path: `https://unpkg.com/${args.path}`,
         };
         // else if (args.path === 'tiny-test-pkg') {
         //   return { path: 'https://unpkg.com/tiny-test-pkg@1.0.0/index.js', namespace: 'a' };
         // }
       });
-    }
+    },
   };
 };
