@@ -14,20 +14,30 @@ const bundle = async (rawCode: string) => {
     });
   }
   // this is bundling the code and returning the result of the bundled code
-  const result = await service.build({
-    // we don't directly provide the ESbuilder our code to bundle, but we provide it an entry point file
-    entryPoints: ['index.js'],
-    bundle: true,
-    write: false,
-    // this is the input state code from above
-    plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
-    define: {
-      'process.env.NODE_ENV': '"production"',
-      global: 'window',
-    },
-  });
-
-  return result.outputFiles[0].text;
+  try {
+    const result = await service.build({
+      // we don't directly provide the ESbuilder our code to bundle, but we provide it an entry point file
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      // this is the input state code from above
+      plugins: [unpkgPathPlugin(), fetchPlugin(rawCode)],
+      define: {
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
+      },
+    });
+    // we make it an object because if successful, it will return a string, if there is an error, it will also be a string, so we cant differentiate between the errors, so we make it an object
+    return {
+      code: result.outputFiles[0].text,
+      err: '',
+    };
+  } catch (error) {
+    return {
+      code: '',
+      err: error.message,
+    };
+  }
 };
 
 export default bundle;

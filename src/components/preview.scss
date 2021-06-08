@@ -18,3 +18,17 @@
     background-color: transparent;
   }
 }
+
+.preview-error {
+  font-family: Monospace;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: red;
+}
+
+.error-message {
+  font-family: Monospace;
+  color: red;
+  font-weight: 600;
+}

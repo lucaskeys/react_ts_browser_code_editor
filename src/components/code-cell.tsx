@@ -8,11 +8,13 @@ const CodeCell = () => {
   // this input will be used in our plugin file for the import package inside our onLoad function for the contents
   const [input, setInput] = useState('');
   const [code, setCode] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundle(input);
-      setCode(output);
+      setCode(output.code);
+      setError(output.err);
     }, 1000);
 
     return () => {
@@ -27,7 +29,7 @@ const CodeCell = () => {
           <CodeEditor onChange={(value) => setInput(value)} initialValue="'Happy coding!'" />
         </Resizable>
         {/* <textarea value={input} onChange={(e) => setInput(e.target.value)}></textarea> */}
-        <Preview code={code} />
+        <Preview code={code} err={error} />
       </div>
     </Resizable>
   );
