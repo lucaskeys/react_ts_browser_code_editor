@@ -19,7 +19,7 @@ export interface deleteCellAction {
 export interface insertCellBeforeAction {
   type: Types.INSERT_CELL_BEFORE;
   payload: {
-    id: string;
+    id: string | null;
     // the type of cell - this is coming from our cell Interface file
     type: CellTypes;
   };
