@@ -3,16 +3,17 @@ import { Types } from '../types/types';
 import { Action } from '../actions';
 import { Cell } from '../cellInterface';
 
-interface CellReducerState {
+interface CellsState {
   loading: boolean;
   error: string | null;
+  // this will be the id of each cell in this array
   order: string[];
   data: {
     [key: string]: Cell;
   };
 }
 
-const INITIAL_STATE: CellReducerState = {
+const INITIAL_STATE: CellsState = {
   loading: false,
   error: null,
   order: [],
@@ -22,16 +23,15 @@ const INITIAL_STATE: CellReducerState = {
 // we annotate the state type to make sure we try access any property on state that doesnt exist
 // this function will return state of type cellReducerState
 // wrap in produce - produce takes another function as an argument
-const cellsReducer = produce((state: CellReducerState = INITIAL_STATE, action: Action): CellReducerState | void => {
+const cellsReducer = produce((state: CellsState = INITIAL_STATE, action: Action): CellsState => {
   // with immer, we are no longer returning anything, as we are just updating state directly, so we can specify returning a CellReduderState type or nothing at all
   switch (action.type) {
     case Types.UPDATE_CELL:
       const { id, content } = action.payload;
-
       // with immer
       // finding the appropriate cell in our data object via the id as the key - then access content property and assign new value
       state.data[id].content = content;
-      return;
+      return state;
     // return {
     //   ...state,
     //   data: {
@@ -43,11 +43,15 @@ const cellsReducer = produce((state: CellReducerState = INITIAL_STATE, action: A
     //   },
     // };
 
+    case Types.DELETE_CELL:
+      delete state.data[action.payload];
+      // deleting it out of the order array as well
+      state.order = state.order.filter((id) => id !== action.payload);
+      return state;
+
     case Types.MOVE_CELL:
       const { direction } = action.payload;
-      const index = state.order.findIndex((id) => {
-        return id === action.payload.id;
-      });
+      const index = state.order.findIndex((id) => id === action.payload.id);
       // this is just trying to find the target index of either up one or down 1 in the array of ordered cells
       const targetIndex = direction === 'up' ? index - 1 : index + 1;
       if (targetIndex < 0 || targetIndex > state.order.length - 1) {
@@ -56,14 +60,6 @@ const cellsReducer = produce((state: CellReducerState = INITIAL_STATE, action: A
 
       state.order[index] = state.order[targetIndex];
       state.order[targetIndex] = action.payload.id;
-      return state;
-
-    case Types.DELETE_CELL:
-      delete state.data[action.payload];
-      // deleting it out of the order array as well
-      state.order = state.order.filter((id) => {
-        return id !== action.payload;
-      });
       return state;
 
     case Types.INSERT_CELL_BEFORE:
@@ -85,7 +81,8 @@ const cellsReducer = produce((state: CellReducerState = INITIAL_STATE, action: A
     default:
       return state;
   }
-});
+  // need to put INITIAL_STATE as second argument
+}, INITIAL_STATE);
 
 const randomId = () => {
   // base36 means it will use a combination of letters and numbers 1-9

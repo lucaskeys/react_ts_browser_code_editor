@@ -8,6 +8,13 @@ const middlewares = [thunk];
 
 export const store = createStore(rootReducer, {}, applyMiddleware(...middlewares));
 
+const state = store.getState();
+
+// store.dispatch({
+//   type: Types.DELETE_CELL,
+//   payload: 'avxfv',
+// });
+
 store.dispatch({
   type: Types.INSERT_CELL_BEFORE,
   payload: {
@@ -25,8 +32,19 @@ store.dispatch({
 });
 
 store.dispatch({
-  type: Types.DELETE_CELL,
-  payload: 'avxfv',
+  type: Types.INSERT_CELL_BEFORE,
+  payload: {
+    id: null,
+    type: 'text',
+  },
 });
 
-console.log(store.getState());
+store.dispatch({
+  type: Types.INSERT_CELL_BEFORE,
+  payload: {
+    id: null,
+    type: 'code',
+  },
+});
+
+console.log(state.cells.data);
