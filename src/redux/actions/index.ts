@@ -16,8 +16,8 @@ export interface deleteCellAction {
   payload: string;
 }
 
-export interface insertCellBeforeAction {
-  type: Types.INSERT_CELL_BEFORE;
+export interface insertCellAfterAction {
+  type: Types.INSERT_CELL_AFTER;
   payload: {
     id: string | null;
     // the type of cell - this is coming from our cell Interface file
@@ -33,4 +33,22 @@ export interface updateCellAction {
   };
 }
 
-export type Action = moveCellAction | deleteCellAction | insertCellBeforeAction | updateCellAction;
+export interface bundleStartAction {
+  type: Types.BUNDLE_START;
+  payload: {
+    cellId: string;
+  };
+}
+
+export interface bundleCompleteAction {
+  type: Types.BUNDLE_COMPLETE;
+  payload: {
+    cellId: string;
+    bundle: {
+      code: string;
+      error: string;
+    };
+  };
+}
+
+export type Action = moveCellAction | deleteCellAction | insertCellAfterAction | updateCellAction | bundleStartAction | bundleCompleteAction;

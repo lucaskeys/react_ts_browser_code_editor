@@ -14,7 +14,6 @@ const CellListItem: React.FC<CellListItemProps> = ({ cell }) => {
 
   if (cell.type === 'code') {
     child = (
-      // react fragments <></>
       <>
         <div className="action-bar-wrapper">
           <ActionBar id={cell.id} />

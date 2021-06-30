@@ -30,12 +30,12 @@ const bundle = async (rawCode: string) => {
     // we make it an object because if successful, it will return a string, if there is an error, it will also be a string, so we cant differentiate between the errors, so we make it an object
     return {
       code: result.outputFiles[0].text,
-      err: '',
+      error: '',
     };
   } catch (error) {
     return {
       code: '',
-      err: error.message,
+      error: error.message,
     };
   }
 };
