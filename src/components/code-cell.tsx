@@ -26,18 +26,33 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
       return data[id];
     });
     // this is not only used for the cumulative value of all previous code cells, combined into one and then bundled, but this also contains a premade show function that shows code on the preview
-    const culmCode = [
-      `
-      const show = (value) => {
-        if(typeof value === 'object') {
-          document.querySelector('#root').innerHTML = JSON.stringify(value);
-        }  
-        document.querySelector('#root').innerHTML = value;
+    const showFunc = `
+    import _React from 'react';
+    import _ReactDOM from 'react-dom';
+    var show = (value) => {
+      const root =  document.querySelector('#root');
+
+      if(typeof value === 'object') {
+        if(value.$$typeof && value.props) {
+          _ReactDOM.render(value,  root)
+        } else {
+        root.innerHTML = JSON.stringify(value);
+        }
+      }  else {
+        root.innerHTML = value;
       }
-      `,
-    ];
+    }
+    `;
+    // no operation
+    const showFuncNoop = 'var show = () => {}';
+    const culmCode = [];
     for (let c of orderedCells) {
       if (c.type === 'code') {
+        if (c.id === cell.id) {
+          culmCode.push(showFunc);
+        } else {
+          culmCode.push(showFuncNoop);
+        }
         culmCode.push(c.content);
       }
       if (c.id === cell.id) {
