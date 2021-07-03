@@ -28,18 +28,18 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   useEffect(() => {
     if (!bundle) {
       // add in a return for each of the code snippets and join them together
-      createBundle(cell.id, culmCode.join('\n'));
+      createBundle(cell.id, culmCode);
       return;
     }
     const timer = setTimeout(async () => {
-      createBundle(cell.id, culmCode.join('\n'));
+      createBundle(cell.id, culmCode);
     }, 750);
 
     return () => {
       clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [culmCode.join('\n'), cell.id, createBundle]);
+  }, [culmCode, cell.id, createBundle]);
 
   return (
     <Resizable direction="vertical">
