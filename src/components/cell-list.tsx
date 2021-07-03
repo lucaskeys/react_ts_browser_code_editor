@@ -3,6 +3,7 @@ import { useTypedSelector } from '../hooks/use-typed-selector';
 import CellListItem from './cell-list-item';
 import AddCell from './add-cell';
 import './add-cell.scss';
+import './cell-list.scss';
 const CellList: React.FC = () => {
   // creates an ordered array of all the cell objects
   const cells = useTypedSelector(({ cells: { order, data } }) => {
@@ -18,7 +19,7 @@ const CellList: React.FC = () => {
     );
   });
   return (
-    <div>
+    <div className="cell-list">
       <AddCell forceVisible={cells.length === 0} prevCellId={null} />
       {renderedCells}
     </div>
