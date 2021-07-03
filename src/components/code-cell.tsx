@@ -5,6 +5,7 @@ import Resizable from './resizable';
 import { Cell } from '../redux/cellInterface';
 import { useActions } from '../hooks/use-actions';
 import { useTypedSelector } from '../hooks/use-typed-selector';
+import { useCulmCod } from '../hooks/use-culm-code';
 import './code-cell.scss';
 
 interface CodeCellProps {
@@ -19,48 +20,8 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell }) => {
   const bundle = useTypedSelector((state) => {
     return state.bundles[cell.id];
   });
+  const culmCode = useCulmCod(cell.id);
 
-  const culmCode = useTypedSelector((state) => {
-    const { data, order } = state.cells;
-    const orderedCells = order.map((id) => {
-      return data[id];
-    });
-    // this is not only used for the cumulative value of all previous code cells, combined into one and then bundled, but this also contains a premade show function that shows code on the preview
-    const showFunc = `
-    import _React from 'react';
-    import _ReactDOM from 'react-dom';
-    var show = (value) => {
-      const root =  document.querySelector('#root');
-
-      if(typeof value === 'object') {
-        if(value.$$typeof && value.props) {
-          _ReactDOM.render(value,  root)
-        } else {
-        root.innerHTML = JSON.stringify(value);
-        }
-      }  else {
-        root.innerHTML = value;
-      }
-    }
-    `;
-    // no operation
-    const showFuncNoop = 'var show = () => {}';
-    const culmCode = [];
-    for (let c of orderedCells) {
-      if (c.type === 'code') {
-        if (c.id === cell.id) {
-          culmCode.push(showFunc);
-        } else {
-          culmCode.push(showFuncNoop);
-        }
-        culmCode.push(c.content);
-      }
-      if (c.id === cell.id) {
-        break;
-      }
-    }
-    return culmCode;
-  });
   console.log(culmCode);
 
   // this is the function that creates our bundle and returns the result - located in the bundler directory
