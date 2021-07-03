@@ -41,5 +41,5 @@ export const useCulmCod = (cellId: string) => {
       }
     }
     return culmCode;
-  });
+  }).join('\n');
 };
